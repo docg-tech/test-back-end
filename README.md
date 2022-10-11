@@ -50,7 +50,7 @@ Consegue sim! Só precisa saber (ou aprender agora) um pouco sobre as seguintes 
 
 - Conceitos de API RESTful
 - Modelagem de dados
-- Ruby on Rails
+- Ruby on Rails ou Node.JS (Express, Koa, Nest...)
 - Algum banco de dados, por exemplo, Postgres, MySQL, SQL Server, MongoDB, etc...
 - Git
 
