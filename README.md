@@ -8,7 +8,7 @@ Este teste tem como objetivo avaliar e desafiar você. Não é obrigatório real
 
 ## O desafio
 
-Sua missão é criar uma API que seja capaz de administrar os clientes e seus pets que solicitam serviços, para que possamos consumir estes dados de maneira prática, rápida e automatizada.
+Sua missão é criar uma API que seja capaz de administrar os clientes que solicitam serviços para seus pets, para que possamos consumir estes dados de maneira prática, rápida e automatizada.
 
 A regra de negócio desta API é:
 Clientes dentro da API podem possuir um ou mais pets, e podem querer executar um serviço para esse pet em uma data específica.
@@ -16,6 +16,8 @@ Clientes dentro da API podem possuir um ou mais pets, e podem querer executar um
 Precisamos no fim apenas saber quais serviços serão executados em um dia específico, para qual cliente e qual pet.
 
 Esta API deverá seguir as práticas RESTful e conter listagens, busca, paginação e filtros. Fique à vontade para decidir quais filtros são mais interessantes.
+
+Ex: Eu cliente quero agendar um Banho Completo para meu pet no dia 15/12/1998
 
 ## O que precisa conter
 
@@ -44,13 +46,17 @@ CRUD = Create, Read, Update e Delete.
 
 Talvez sejam necessárias algumas relações intermediárias para guardar informações extras...
 
+## Extra
+
+Implemente um alerta de cadastro que envie um e-mail de boas-vindas para o cliente.
+
 ## Consigo fazer?
 
 Consegue sim! Só precisa saber (ou aprender agora) um pouco sobre as seguintes tecnologias:
 
 - Conceitos de API RESTful
 - Modelagem de dados
-- Ruby on Rails ou Node.JS (Express, Koa, Nest...)
+- Ruby on Rails, Python ou Node.JS (Express, Koa, Nest...)
 - Algum banco de dados, por exemplo, Postgres, MySQL, SQL Server, MongoDB, etc...
 - Git
 
@@ -64,10 +70,12 @@ Modelagem de dados;
 
 ## Ganha mais pontos
 
+- Desenvolver em Ruby
 - Desenvolver utilizando TDD;
+- Trabalhar com gerenciador de eventos;
 - Criar API de relatório;
-- Criar uma solução de autenticação.
-- Encapsular a solução com docker
+- Criar uma solução de autenticação;
+- Encapsular a solução com docker;
 
 ## Como eu entrego?
 
