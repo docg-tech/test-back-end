@@ -1,0 +1,8 @@
+pytest==7.2.0
+invoke==1.7.3
+black==22.10.0
+isort==5.10.1
+pre-commit==2.20.0
+flake8==5.0.4
+bandit==1.7.4
+gitlint== v0.17.0
