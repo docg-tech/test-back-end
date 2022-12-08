@@ -1,9 +1,13 @@
+# flake8: noqa
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 from test_back_end.models import Base
+from test_back_end.models.cliente import Cliente
+from test_back_end.models.pet import Pet
+from test_back_end.models.servico import Servico
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
