@@ -1,4 +1,5 @@
 import sqlalchemy as sa
+from sqlalchemy.orm import relationship
 
 from . import db
 
@@ -9,4 +10,5 @@ class Cliente(db.Model):
     nome = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), nullable=False, unique=True)
     telefone = db.Column(db.String(11), nullable=False)
-    # TODO: Column Pets
+
+    pets = db.relationship("Pet", back_populates="cliente")
