@@ -1,12 +1,12 @@
 import sqlalchemy as sa
 
-from . import Base
+from . import db
 
 
-class Cliente(Base):
+class Cliente(db.Model):
     __tablename__ = "cliente"
-    id = sa.Column(sa.Integer, primary_key=True)
-    nome = sa.Column(sa.String(50), nullable=False)
-    email = sa.Column(sa.String(50), nullable=False, unique=True)
-    telefone = sa.Column(sa.String(11), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=False, unique=True)
+    telefone = db.Column(db.String(11), nullable=False)
     # TODO: Column Pets
