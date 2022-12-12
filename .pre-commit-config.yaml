@@ -25,7 +25,10 @@ repos:
     rev: 1.7.4
     hooks:
     - id: bandit
-    args: [--skip, "B101"]
+      exclude: ^tests/
+    args: 
+    - --skip
+    - B101
 
 -   repo: https://github.com/jorisroovers/gitlint
     rev:  v0.17.0
