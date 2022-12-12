@@ -14,13 +14,13 @@ STATUS_SUCCESS_NO_CONTENT_204 = 204
 
 
 class ClienteResource(Resource):
-    def get(self, cliente_id: str = None):
+    def get(self, cliente_id: int = None):
         """
         Retorna o cliente
         """
 
         if cliente_id is not None:
-            cliente = ClienteModel.query.get_or_404(cliente_id)
+            cliente = ClienteModel.query.get_or_404(cliente_id).first()
             schema = ClienteSchema()
             json_cliente = schema.dumps(cliente)
 

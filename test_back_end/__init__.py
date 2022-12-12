@@ -22,12 +22,19 @@ def create_app(config: Union[str, object] = None) -> Flask:
         app.config.from_object(cfg)
 
     from test_back_end.routes.cliente import ClienteResource
+    from test_back_end.routes.pet import PetResource
 
     api.add_resource(
         ClienteResource,
         "/cliente",
         "/cliente/<int:cliente_id>",
         endpoint="cliente",
+    )
+    api.add_resource(
+        PetResource,
+        "/pet",
+        "/pet/<int:pet_id>",
+        endpoint="pet",
     )
 
     db.init_app(app)

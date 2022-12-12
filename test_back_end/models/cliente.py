@@ -2,6 +2,7 @@ import sqlalchemy as sa
 from sqlalchemy.orm import relationship
 
 from . import db
+from .pet import Pet
 
 
 class Cliente(db.Model):
