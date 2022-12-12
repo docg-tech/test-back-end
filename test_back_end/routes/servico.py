@@ -75,3 +75,16 @@ class ServicoResource(Resource):
 
         return_data = schema.dumps(servico)
         return return_data, STATUS_SUCCESS_200
+
+
+class AgendaResource(Resource):
+    def get(self):
+        """ """
+        args = request.args
+        servicos = ServicoModel.query.filter_by(
+            data_agendamento=args.get("data")
+        ).all()
+        schema = ServicoSchema(many=True)
+        return_servicos = schema.dumps(servicos)
+
+        return return_servicos, STATUS_SUCCESS_200

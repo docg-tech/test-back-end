@@ -92,3 +92,12 @@ def test_patch(client, db, add_servico_to_db):
 
     updated_servico = ServicoModel.query.filter_by(id=1).first()
     assert updated_servico.titulo == patch_servico_data["titulo"]
+
+
+def test_get_agenda(client, add_servico_to_db, dados_servico):
+    """ """
+    response = client.get(
+        "/agenda", query_string={"data": dados_servico["data_agendamento"]}
+    )
+
+    assert response.status_code == 200
