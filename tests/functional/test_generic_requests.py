@@ -14,6 +14,6 @@ def test_get_order_by(client, db):
     db.session.add_all([cliente1, cliente2])
     db.session.commit()
 
-    response = client.get("/cliente", query_string={"page": 1, "per_page": 1})
+    response = client.get("/cliente", query_string={"nome": "abc"})
 
     assert response.status_code == 200

@@ -15,6 +15,57 @@ STATUS_SUCCESS_NO_CONTENT_204 = 204
 
 
 class ClienteResource(Resource):
+    def __init__(self):
+        self.model = ClienteModel
+
+    def _paginate(self, query):
+        pagination_params = {
+            "page": request.args.get("page", 1, type=int),
+            "max_per_page": request.args.get("limit", None, type=int),
+            "per_page": request.args.get("per_page", None, type=int),
+        }
+        # Remove keys with None values
+        pagination_params = {
+            k: v for k, v in pagination_params.items() if v is not None
+        }
+
+        paginated_result = query.paginate(**pagination_params)
+
+        return paginated_result
+
+    def _filter_by(self, query):
+        columns_filter = {}
+        columns_keys = query.statement.columns.keys()
+        for column in columns_keys:
+            columns_filter[column] = request.args.get(column, None, type=str)
+
+        query = query.filter_by(**columns_filter)
+
+        return query
+
+    def _order_by(self, query):
+        order_by = request.args.get("order_by", None, type=str)
+
+        if not order_by:
+            return query
+
+        if order_by[0] == "-":
+            order_by = order_by[1:]
+            query = query.order_by(desc(order_by))
+            return query
+        else:
+            query = query.order_by(order_by)
+            return query
+
+    def _get_query(
+        self,
+    ):
+        query = self.model.query
+        query = self._filter_by(query)
+        query = self._order_by(query)
+        query = self._paginate(query)
+        return query
+
     def get(self, cliente_id: int = None):
         """
         Retorna o cliente
@@ -26,31 +77,9 @@ class ClienteResource(Resource):
             json_cliente = schema.dumps(cliente)
 
         if cliente_id is None:
-            # Ordenacao
-            order_by = request.args.get("order_by")
-            if order_by:
-                if order_by[0] == "-":
-                    query = ClienteModel.query.order_by(desc(order_by[1:]))
-                else:
-                    query = ClienteModel.query.order_by(order_by)
-            else:
-                query = ClienteModel.query.order_by("id")
-
-            # Paginacao
-
-            pagination_data = {
-                "page": int,
-                "per_page": int,
-            }
-            for key in pagination_data:
-                if request.args.get(key) is not None:
-                    pagination_data[key] = int(request.args.get(key))
-
-            paginated_query = query.paginate(**pagination_data)
-            # Fim
-            cliente = paginated_query.items
+            paginated_result = self._get_query()
             schema = ClienteSchema(many=True)
-            json_cliente = schema.dumps(cliente)
+            json_cliente = schema.dumps(paginated_result.items)
 
         return json_cliente, STATUS_SUCCESS_200
 
