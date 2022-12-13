@@ -1,5 +1,6 @@
 from flask import Flask, request
 from flask_restful import Api, Resource
+from sqlalchemy import desc
 
 from test_back_end import db
 from test_back_end.models.cliente import Cliente as ClienteModel
@@ -24,8 +25,30 @@ class ClienteResource(Resource):
             schema = ClienteSchema()
             json_cliente = schema.dumps(cliente)
 
-        else:
-            cliente = ClienteModel.query.all()
+        if cliente_id is None:
+            # Ordenacao
+            order_by = request.args.get("order_by")
+            if order_by:
+                if order_by[0] == "-":
+                    query = ClienteModel.query.order_by(desc(order_by[1:]))
+                else:
+                    query = ClienteModel.query.order_by(order_by)
+            else:
+                query = ClienteModel.query.order_by("id")
+
+            # Paginacao
+
+            pagination_data = {
+                "page": int,
+                "per_page": int,
+            }
+            for key in pagination_data:
+                if request.args.get(key) is not None:
+                    pagination_data[key] = int(request.args.get(key))
+
+            paginated_query = query.paginate(**pagination_data)
+            # Fim
+            cliente = paginated_query.items
             schema = ClienteSchema(many=True)
             json_cliente = schema.dumps(cliente)
 
