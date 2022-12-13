@@ -1,22 +1,18 @@
-from flask import Flask, request
-from flask_restful import Api, Resource
+from flask import request
+from flask_restful import Resource
 from sqlalchemy import desc
 
 from test_back_end import db
-from test_back_end.models.cliente import Cliente as ClienteModel
-from test_back_end.schemas.cliente import ClienteSchema
-
-app = Flask(__name__)
-api = Api(app)
 
 STATUS_SUCCESS_200 = 200
 STATUS_CREATED_SUCESS_201 = 201
 STATUS_SUCCESS_NO_CONTENT_204 = 204
 
 
-class ClienteResource(Resource):
-    def __init__(self):
-        self.model = ClienteModel
+class BaseCRUD:
+    def __init__(self, model=None, schema=None):
+        self.model = model
+        self.schema = schema
 
     def _paginate(self, query):
         pagination_params = {
@@ -66,68 +62,59 @@ class ClienteResource(Resource):
         query = self._paginate(query)
         return query
 
-    def get(self, cliente_id: int = None):
-        """
-        Retorna o cliente
-        """
+    def get(self, _id: int = None):
+        """ """
+        schema = self.schema()
+        if _id is not None:
+            result = self.model.query.get_or_404(_id).first()
+            json_result = schema.dumps(result)
 
-        if cliente_id is not None:
-            cliente = ClienteModel.query.get_or_404(cliente_id).first()
-            schema = ClienteSchema()
-            json_cliente = schema.dumps(cliente)
-
-        if cliente_id is None:
+        if _id is None:
             paginated_result = self._get_query()
-            schema = ClienteSchema(many=True)
-            json_cliente = schema.dumps(paginated_result.items)
+            schema = self.schema(many=True)
+            json_result = schema.dumps(paginated_result.items)
 
-        return json_cliente, STATUS_SUCCESS_200
+        return json_result, STATUS_SUCCESS_200
 
     def put(self):
-        """
-        Adiciona um cliente
-        """
+        """ """
         data = request.get_json()
+        schema = self.schema()
 
-        schema = ClienteSchema()
         validated_data = schema.load(data)
 
-        cliente = ClienteModel(**validated_data)
+        new_object = self.model(**validated_data)
 
-        db.session.add(cliente)
+        db.session.add(new_object)
         db.session.commit()
 
-        return_data = schema.dumps(cliente)
+        return_data = schema.dumps(new_object)
         return return_data, STATUS_CREATED_SUCESS_201
 
-    def delete(self, cliente_id):
-        """
-        Remove um cliente
-        """
-        cliente = ClienteModel.query.get_or_404(cliente_id)
+    def delete(self, _id):
+        """ """
+        selected_object = self.model.query.get_or_404(_id)
 
-        db.session.delete(cliente)
+        db.session.delete(selected_object)
         db.session.commit()
 
         return {}, STATUS_SUCCESS_NO_CONTENT_204
 
-    def patch(self, cliente_id):
-        """
-        Atualiza os dados de um cliente
-        """
-        cliente = ClienteModel.query.get_or_404(cliente_id)
+    def patch(self, _id):
+        """ """
+        selected_object = self.model.query.get_or_404(_id)
 
         data = request.get_json()
 
-        schema = ClienteSchema()
-        validated_client_data = schema.load(data)
+        schema = self.schema()
+        validated_data = schema.load(data)
 
         # Atualiza os dados do Model com os dados recebidos
-        for key, value in validated_client_data.items():
-            setattr(cliente, key, value)
+        for key, value in validated_data.items():
+            setattr(selected_object, key, value)
 
         db.session.commit()
-        db.session.refresh(cliente)
+        db.session.refresh(selected_object)
 
-        return_data = schema.dumps(cliente)
+        return_data = schema.dumps(selected_object)
         return return_data, STATUS_SUCCESS_200

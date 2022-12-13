@@ -21,26 +21,26 @@ def create_app(config: Union[str, object] = None) -> Flask:
 
         app.config.from_object(cfg)
 
-    from test_back_end.routes.cliente import ClienteResource
-    from test_back_end.routes.pet import PetResource
-    from test_back_end.routes.servico import AgendaResource, ServicoResource
+    from test_back_end.resources.cliente import ClienteResource
+    from test_back_end.resources.pet import PetResource
+    from test_back_end.resources.servico import AgendaResource, ServicoResource
 
     api.add_resource(
         ClienteResource,
         "/cliente",
-        "/cliente/<int:cliente_id>",
+        "/cliente/<int:_id>",
         endpoint="cliente",
     )
     api.add_resource(
         PetResource,
         "/pet",
-        "/pet/<int:pet_id>",
+        "/pet/<int:_id>",
         endpoint="pet",
     )
     api.add_resource(
         ServicoResource,
         "/servico",
-        "/servico/<int:servico_id>",
+        "/servico/<int:_id>",
         endpoint="servico",
     )
     api.add_resource(
