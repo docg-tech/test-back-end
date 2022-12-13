@@ -1,0 +1,252 @@
+openapi: 3.0.0
+info:
+    title: PetshopApi
+    description: Gerenciamento de Petshop
+    version: "0.1"
+servers:
+    - url: http://localhost:8080
+paths:
+    /cliente:
+        get:
+            description: Retorna uma lista de clientes
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    properties:
+                                        nome:
+                                            type: string
+                                            example: "Joao"
+        put:
+            description: Atualiza um cliente existente
+            requestBody:
+                description: Os dados do cliente a ser atualizado
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                nome:
+                                    type: string
+                                    example: "Joao"
+                                email:
+                                    type: string
+                                    example: "joao@email.com"
+                                telefone:
+                                    type: string
+                                    example: "1234567890"
+            responses:
+                "200":
+                    description: OK
+        delete:
+            description: Deleta um cliente existente
+            responses:
+                "204":
+                    description: Deletado com sucesso
+
+        patch:
+            description: Atualiza um cliente existente
+            requestBody:
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      nome:
+                        type: string
+                        example: "Joao"
+                      email:
+                        type: string
+                        example: "joao@email.com"
+                      telefone:
+                        type: string
+                        example: "1234567890"
+            responses:
+              "200":
+                  description: Atualizado com sucesso
+        
+    /pet:
+        get:
+            description: Retorna uma lista de pets
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    nome:
+                                      type: string
+                                      example: "Toto"
+                                    especie:
+                                      type: string
+                                      example: "Cachorro"
+                                    raca:
+                                      type: string
+                                      example: "Pitbull"
+                                    cliente_id:
+                                      type: integer
+                                      example: 1
+        put:
+            description: Atualiza um pet existente
+            requestBody:
+                description: Os dados do pet a ser atualizado
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                nome:
+                                  type: string
+                                  example: "Toto"
+                                especie:
+                                  type: string
+                                  example: "Cachorro"
+                                raca:
+                                  type: string
+                                  example: "Pitbull"
+                                cliente_id:
+                                  type: integer
+                                  example: 1
+            responses:
+                "200":
+                    description: OK
+        delete:
+            description: Deleta um pet existente
+            responses:
+                "204":
+                    description: Deletado com sucesso
+
+        patch:
+            description: Atualiza um pet existente
+            requestBody:
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                        nome:
+                          type: string
+                          example: "Toto"
+                        especie:
+                          type: string
+                          example: "Cachorro"
+                        raca:
+                          type: string
+                          example: "Pitbull"
+                        cliente_id:
+                          type: integer
+                          example: 1
+            responses:
+              "200":
+                  description: Atualizado com sucesso
+
+    /servico:
+        get:
+            description: Retorna uma lista de servicos
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    titulo:
+                                      type: string
+                                      example: "Banho e Tosa"
+                                    preco:
+                                      type: number
+                                      example: 50.00
+                                    data_agendamento:
+                                      type: string
+                                      format: date-time
+                                      example: "2017-07-21T17:32:28Z"
+                                    pet_id:
+                                      type: integer
+                                      example: 1
+
+        put:
+            description: Atualiza um pet existente
+            requestBody:
+                description: Os dados do pet a ser atualizado
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                titulo:
+                                  type: string
+                                  example: "Banho e Tosa"
+                                preco:
+                                  type: number
+                                  example: 50.00
+                                data_agendamento:
+                                  type: string
+                                  format: date-time
+                                  example: "2017-07-21T17:32:28Z"
+                                pet_id:
+                                  type: integer
+                                  example: 1
+            responses:
+                "200":
+                    description: OK
+        delete:
+            description: Deleta um pet existente
+            responses:
+                "204":
+                    description: Deletado com sucesso
+
+        patch:
+            description: Atualiza um pet existente
+            requestBody:
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                        titulo:
+                          type: string
+                          example: "Banho e Tosa"
+                        preco:
+                          type: number
+                          example: 50.00
+                        data_agendamento:
+                          type: string
+                          format: date-time
+                          example: "2017-07-21T17:32:28Z"
+                        pet_id:
+                          type: integer
+                          example: 1
+            responses:
+              "200":
+                  description: Atualizado com sucesso
+
+    /agenda:
+        get:
+            description: Pesquisa os servicos que estao agendados para a data enviada
+            parameters:
+              - in: query
+                name: data
+                schema:
+                  type: string
+                  format: date
+                required: true
+                description: Data a ser pesquisada
+            responses:
+              "200":
+                description: Lista de servicos que estao agendados para a data enviada
+                content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                  dados_servico:
+                                    type: string
+                
+              
