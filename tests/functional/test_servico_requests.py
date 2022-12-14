@@ -58,46 +58,45 @@ def dados_servico():
     yield dados
 
 
-def test_get(client, db, add_servico_to_db):
-    """ """
-    response = client.get("/servico")
+class TestServico:
+    def test_get(client, db, add_servico_to_db):
+        """ """
+        response = client.get("/servico")
 
-    assert response.status_code == 200
+        assert response.status_code == 200
 
+    def test_put(client, db, dados_servico, add_pet_to_db):
+        """ """
+        response = client.put("/servico", json=dados_servico)
 
-def test_put(client, db, dados_servico, add_pet_to_db):
-    """ """
-    response = client.put("/servico", json=dados_servico)
+        assert response.status_code == 201
 
-    assert response.status_code == 201
+    def test_delete(client, db, add_servico_to_db):
+        """ """
+        response = client.delete("/servico/1")
 
+        assert response.status_code == 204
+        assert ServicoModel.query.filter_by(id=1).count() == 0
 
-def test_delete(client, db, add_servico_to_db):
-    """ """
-    response = client.delete("/servico/1")
+    def test_patch(client, db, add_servico_to_db):
+        """ """
+        patch_servico_data = {
+            "titulo": "teste2",
+        }
 
-    assert response.status_code == 204
-    assert ServicoModel.query.filter_by(id=1).count() == 0
+        response = client.patch("/servico/1", json=patch_servico_data)
 
+        assert response.status_code == 200
 
-def test_patch(client, db, add_servico_to_db):
-    """ """
-    patch_servico_data = {
-        "titulo": "teste2",
-    }
-
-    response = client.patch("/servico/1", json=patch_servico_data)
-
-    assert response.status_code == 200
-
-    updated_servico = ServicoModel.query.filter_by(id=1).first()
-    assert updated_servico.titulo == patch_servico_data["titulo"]
+        updated_servico = ServicoModel.query.filter_by(id=1).first()
+        assert updated_servico.titulo == patch_servico_data["titulo"]
 
 
-def test_get_agenda(client, add_servico_to_db, dados_servico):
-    """ """
-    response = client.get(
-        "/agenda", query_string={"data": dados_servico["data_agendamento"]}
-    )
+class TestAgenda:
+    def test_get(client, add_servico_to_db, dados_servico):
+        """ """
+        response = client.get(
+            "/agenda", query_string={"data": dados_servico["data_agendamento"]}
+        )
 
-    assert response.status_code == 200
+        assert response.status_code == 200
