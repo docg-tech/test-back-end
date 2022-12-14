@@ -7,3 +7,4 @@ flake8==5.0.4
 bandit==1.7.4
 gitlint== v0.17.0
 requests-mock==1.10.08080
+pytest-mock==3.10.0
