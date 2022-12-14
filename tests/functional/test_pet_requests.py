@@ -2,7 +2,7 @@ from test_back_end.models.pet import Pet as PetModel
 
 
 class TestPet:
-    def test_get(client, db):
+    def test_get(self, client, db):
         from test_back_end.models.cliente import Cliente as ClienteModel
 
         client_data = {
@@ -28,7 +28,7 @@ class TestPet:
 
         assert response.status_code == 200
 
-    def test_put(client, db):
+    def test_put(self, client, db):
         """ """
         from test_back_end.models.cliente import Cliente as ClienteModel
 
@@ -52,7 +52,7 @@ class TestPet:
 
         assert response.status_code == 201
 
-    def test_delete(client, db):
+    def test_delete(self, client, db):
         """ """
         from test_back_end.models.cliente import Cliente as ClienteModel
 
@@ -80,7 +80,7 @@ class TestPet:
         assert response.status_code == 204
         assert PetModel.query.filter_by(id=1).count() == 0
 
-    def test_patch(client, db):
+    def test_patch(self, client, db):
         """ """
         from test_back_end.models.cliente import Cliente as ClienteModel
 

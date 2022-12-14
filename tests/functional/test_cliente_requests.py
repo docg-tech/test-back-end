@@ -1,5 +1,5 @@
 class TestCliente:
-    def test_get(client, db):
+    def test_get(self, client, db):
         """
         DADO -
         QUANDO -
@@ -20,7 +20,7 @@ class TestCliente:
         # TODO: verificar response.get_json()
         assert response.status_code == 200
 
-    def test_put(client, db):
+    def test_put(self, client, db):
         """ """
         client_data = {
             "nome": "teste",
@@ -32,7 +32,7 @@ class TestCliente:
 
         assert response.status_code == 201
 
-    def test_delete(client, db):
+    def test_delete(self, client, db):
         """ """
         from test_back_end.models.cliente import Cliente as ClienteModel
 
@@ -49,7 +49,7 @@ class TestCliente:
         assert response.status_code == 204
         assert ClienteModel.query.filter_by(id=1).count() == 0
 
-    def test_patch(client, db):
+    def test_patch(self, client, db):
         """ """
         from test_back_end.models.cliente import Cliente as ClienteModel
 

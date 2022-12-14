@@ -52,33 +52,33 @@ def dados_servico():
     dados = {
         "titulo": "Servico Teste",
         "preco": 52.50,
-        "data_agendamento": "2022-12-12T12:34:56.123456",
+        "data_agendamento": "12/12/2022",
         "pet_id": 1,
     }
     yield dados
 
 
 class TestServico:
-    def test_get(client, db, add_servico_to_db):
+    def test_get(self, client, db, add_servico_to_db):
         """ """
         response = client.get("/servico")
 
         assert response.status_code == 200
 
-    def test_put(client, db, dados_servico, add_pet_to_db):
+    def test_put(self, client, db, dados_servico, add_pet_to_db):
         """ """
         response = client.put("/servico", json=dados_servico)
 
         assert response.status_code == 201
 
-    def test_delete(client, db, add_servico_to_db):
+    def test_delete(self, client, db, add_servico_to_db):
         """ """
         response = client.delete("/servico/1")
 
         assert response.status_code == 204
         assert ServicoModel.query.filter_by(id=1).count() == 0
 
-    def test_patch(client, db, add_servico_to_db):
+    def test_patch(self, client, db, add_servico_to_db):
         """ """
         patch_servico_data = {
             "titulo": "teste2",
@@ -93,10 +93,8 @@ class TestServico:
 
 
 class TestAgenda:
-    def test_get(client, add_servico_to_db, dados_servico):
+    def test_pesquisar_data(self, client, add_servico_to_db, dados_servico):
         """ """
-        response = client.get(
-            "/agenda", query_string={"data": dados_servico["data_agendamento"]}
-        )
+        response = client.get("/agenda", query_string={"data": "12/12/2022"})
 
         assert response.status_code == 200
