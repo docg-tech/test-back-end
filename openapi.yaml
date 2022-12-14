@@ -166,7 +166,7 @@ paths:
                                     data_agendamento:
                                       type: string
                                       format: date-time
-                                      example: "2017-07-21T17:32:28Z"
+                                      example: "20/12/2022"
                                     pet_id:
                                       type: integer
                                       example: 1
