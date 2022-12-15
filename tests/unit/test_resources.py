@@ -2,7 +2,7 @@ import flask
 import pytest
 from flask import current_app
 
-from test_back_end.resources import BaseCRUD
+from test_back_end.resources import BaseCRUD, paginate_query
 
 
 class TestBaseCRUD:
@@ -42,7 +42,7 @@ class TestBaseCRUD:
         }
 
         with current_app.test_request_context(query_string=pagination_params):
-            paginated_result = base_crud._paginate(query)
+            paginated_result = paginate_query(query, ClienteSchema)
 
         assert isinstance(paginated_result, dict)
         assert paginated_result["page"] == 1

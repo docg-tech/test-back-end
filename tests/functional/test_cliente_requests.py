@@ -17,8 +17,8 @@ class TestCliente:
         db.session.commit()
 
         response = client.get("/cliente")
-        # TODO: verificar response.get_json()
         assert response.status_code == 200
+        assert isinstance(response.get_json(), dict)
 
     def test_put(self, client, db):
         """ """
@@ -31,6 +31,7 @@ class TestCliente:
         response = client.put("/cliente", json=client_data)
 
         assert response.status_code == 201
+        assert isinstance(response.get_json(), dict)
 
     def test_delete(self, client, db):
         """ """
@@ -70,6 +71,7 @@ class TestCliente:
         )
 
         assert response.status_code == 200
+        assert isinstance(response.get_json(), dict)
 
         updated_client = ClienteModel.query.filter_by(
             id=client_data["id"]

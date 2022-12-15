@@ -64,12 +64,14 @@ class TestServico:
         response = client.get("/servico")
 
         assert response.status_code == 200
+        assert isinstance(response.get_json(), dict)
 
     def test_put(self, client, db, dados_servico, add_pet_to_db):
         """ """
         response = client.put("/servico", json=dados_servico)
 
         assert response.status_code == 201
+        assert isinstance(response.get_json(), dict)
 
     def test_delete(self, client, db, add_servico_to_db):
         """ """
@@ -87,6 +89,7 @@ class TestServico:
         response = client.patch("/servico/1", json=patch_servico_data)
 
         assert response.status_code == 200
+        assert isinstance(response.get_json(), dict)
 
         updated_servico = ServicoModel.query.filter_by(id=1).first()
         assert updated_servico.titulo == patch_servico_data["titulo"]
@@ -98,3 +101,4 @@ class TestAgenda:
         response = client.get("/agenda", query_string={"data": "12/12/2022"})
 
         assert response.status_code == 200
+        assert isinstance(response.get_json(), dict)

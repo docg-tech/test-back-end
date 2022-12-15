@@ -1,5 +1,4 @@
 from flask import request
-from flask_restful import Resource
 from sqlalchemy import desc
 
 from test_back_end import db
@@ -10,35 +9,61 @@ STATUS_CREATED_SUCESS_201 = 201
 STATUS_SUCCESS_NO_CONTENT_204 = 204
 
 
+def paginate_query(query, schema):
+    pagination_params = {
+        "page": request.args.get("page", 1, type=int),
+        "max_per_page": request.args.get("limit", None, type=int),
+        "per_page": request.args.get("per_page", None, type=int),
+    }
+    # Remove keys with None values
+    pagination_params = {
+        k: v for k, v in pagination_params.items() if v is not None
+    }
+
+    paginated_query = query.paginate(**pagination_params)
+
+    paginated_result = PaginationSchema().dump(
+        {
+            "page": paginated_query.page,
+            "per_page": paginated_query.per_page,
+            "total_items": paginated_query.total,
+            "pages": paginated_query.pages,
+            "items": schema(many=True).dump(paginated_query.items),
+        }
+    )
+
+    return paginated_result
+
+
 class BaseCRUD:
     def __init__(self, model=None, schema=None):
         self.model = model
         self.schema = schema
 
-    def _paginate(self, query):
-        pagination_params = {
-            "page": request.args.get("page", 1, type=int),
-            "max_per_page": request.args.get("limit", None, type=int),
-            "per_page": request.args.get("per_page", None, type=int),
-        }
-        # Remove keys with None values
-        pagination_params = {
-            k: v for k, v in pagination_params.items() if v is not None
-        }
+    # def _paginate(self, query):
+    #     pagination_params = {
+    #         "page": request.args.get("page", 1, type=int),
+    #         "max_per_page": request.args.get("limit", None, type=int),
+    #         "per_page": request.args.get("per_page", None, type=int),
+    #     }
+    #     # Remove keys with None values
+    #     pagination_params = {
+    #         k: v for k, v in pagination_params.items() if v is not None
+    #     }
 
-        paginated_query = query.paginate(**pagination_params)
+    #     paginated_query = query.paginate(**pagination_params)
 
-        paginated_result = PaginationSchema().dump(
-            {
-                "page": paginated_query.page,
-                "per_page": paginated_query.per_page,
-                "total_items": paginated_query.total,
-                "pages": paginated_query.pages,
-                "items": self.schema(many=True).dump(paginated_query.items),
-            }
-        )
+    #     paginated_result = PaginationSchema().dump(
+    #         {
+    #             "page": paginated_query.page,
+    #             "per_page": paginated_query.per_page,
+    #             "total_items": paginated_query.total,
+    #             "pages": paginated_query.pages,
+    #             "items": self.schema(many=True).dump(paginated_query.items),
+    #         }
+    #     )
 
-        return paginated_result
+    #     return paginated_result
 
     def _filter_by(self, query):
         columns_filter = {}
@@ -75,14 +100,14 @@ class BaseCRUD:
         query = self.model.query
         query = self._filter_by(query)
         query = self._order_by(query)
-        query = self._paginate(query)
+        query = paginate_query(query, self.schema)
         return query
 
     def get(self, _id: int = None):
         """ """
         if _id is not None:
             result = self.model.query.get_or_404(_id).first()
-            return self.schema().dumps(result), STATUS_SUCCESS_200
+            return self.schema().dump(result), STATUS_SUCCESS_200
 
         if _id is None:
             paginated_result = self._get_query()
@@ -100,7 +125,7 @@ class BaseCRUD:
         db.session.add(new_object)
         db.session.commit()
 
-        return_data = schema.dumps(new_object)
+        return_data = schema.dump(new_object)
         return return_data, STATUS_CREATED_SUCESS_201
 
     def delete(self, _id):
@@ -128,5 +153,5 @@ class BaseCRUD:
         db.session.commit()
         db.session.refresh(selected_object)
 
-        return_data = schema.dumps(selected_object)
+        return_data = schema.dump(selected_object)
         return return_data, STATUS_SUCCESS_200

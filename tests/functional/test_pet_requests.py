@@ -27,6 +27,7 @@ class TestPet:
         response = client.get("/pet")
 
         assert response.status_code == 200
+        assert isinstance(response.get_json(), dict)
 
     def test_put(self, client, db):
         """ """
@@ -51,6 +52,7 @@ class TestPet:
         response = client.put("/pet", json=pet_data)
 
         assert response.status_code == 201
+        assert isinstance(response.get_json(), dict)
 
     def test_delete(self, client, db):
         """ """
@@ -109,3 +111,4 @@ class TestPet:
         response = client.patch("/pet/1", json=new_pet_data)
 
         assert response.status_code == 200
+        assert isinstance(response.get_json(), dict)
