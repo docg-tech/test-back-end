@@ -45,3 +45,77 @@ class TestBaseCRUD:
             paginated_result = base_crud._paginate(query)
 
         assert len(paginated_result.items) == 1
+
+    def test_order_by(self, client, db):
+        """
+        Test the ordering of the query results
+        Test requisition parameters for ordering
+        """
+        from test_back_end.models.cliente import Cliente as ClienteModel
+        from test_back_end.schemas.cliente import ClienteSchema
+
+        base_crud = BaseCRUD(model=ClienteModel, schema=ClienteSchema)
+
+        cliente1 = ClienteModel(
+            **{
+                "nome": "Aaron",
+                "email": "aaron@email.com",
+                "telefone": "41987654321",
+            }
+        )
+        cliente2 = ClienteModel(
+            **{
+                "nome": "Zaquias",
+                "email": "zaquias@email.com",
+                "telefone": "11987654321",
+            }
+        )
+
+        db.session.add_all([cliente1, cliente2])
+        db.session.commit()
+
+        query = ClienteModel.query
+
+        order_by_params = {"order_by": "nome"}
+
+        with current_app.test_request_context(query_string=order_by_params):
+            ordered_result = base_crud._order_by(query)
+
+        assert ordered_result[0].nome == "Aaron"
+
+    def test_filter_by(self, client, db):
+        """
+        Test the filtering of the query results
+        Test requisition parameters for filtering
+        """
+        from test_back_end.models.cliente import Cliente as ClienteModel
+        from test_back_end.schemas.cliente import ClienteSchema
+
+        base_crud = BaseCRUD(model=ClienteModel, schema=ClienteSchema)
+
+        cliente1 = ClienteModel(
+            **{
+                "nome": "Aaron",
+                "email": "aaron@email.com",
+                "telefone": "41987654321",
+            }
+        )
+        cliente2 = ClienteModel(
+            **{
+                "nome": "Zaquias",
+                "email": "zaquias@email.com",
+                "telefone": "11987654321",
+            }
+        )
+
+        db.session.add_all([cliente1, cliente2])
+        db.session.commit()
+
+        query = ClienteModel.query
+
+        filter_by_params = {"nome": "Aaron"}
+
+        with current_app.test_request_context(query_string=filter_by_params):
+            filtered_result = base_crud._filter_by(query)
+
+        assert filtered_result[0].nome == "Aaron"
