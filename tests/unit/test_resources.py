@@ -44,7 +44,12 @@ class TestBaseCRUD:
         with current_app.test_request_context(query_string=pagination_params):
             paginated_result = base_crud._paginate(query)
 
-        assert len(paginated_result.items) == 1
+        assert isinstance(paginated_result, dict)
+        assert paginated_result["page"] == 1
+        assert paginated_result["per_page"] == 1
+        assert paginated_result["total_items"] == 2
+        assert paginated_result["pages"] == 2
+        assert len(paginated_result["items"]) == 1
 
     def test_order_by(self, client, db):
         """
