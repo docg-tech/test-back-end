@@ -3,6 +3,7 @@ from flask_restful import Resource
 from sqlalchemy import desc
 
 from test_back_end import db
+from test_back_end.schemas import PaginationSchema
 
 STATUS_SUCCESS_200 = 200
 STATUS_CREATED_SUCESS_201 = 201
@@ -25,7 +26,17 @@ class BaseCRUD:
             k: v for k, v in pagination_params.items() if v is not None
         }
 
-        paginated_result = query.paginate(**pagination_params)
+        paginated_query = query.paginate(**pagination_params)
+
+        paginated_result = PaginationSchema().dump(
+            {
+                "page": paginated_query.page,
+                "per_page": paginated_query.per_page,
+                "total_items": paginated_query.total,
+                "pages": paginated_query.pages,
+                "items": self.schema(many=True).dump(paginated_query.items),
+            }
+        )
 
         return paginated_result
 
@@ -69,17 +80,13 @@ class BaseCRUD:
 
     def get(self, _id: int = None):
         """ """
-        schema = self.schema()
         if _id is not None:
             result = self.model.query.get_or_404(_id).first()
-            json_result = schema.dumps(result)
+            return self.schema().dumps(result), STATUS_SUCCESS_200
 
         if _id is None:
             paginated_result = self._get_query()
-            schema = self.schema(many=True)
-            json_result = schema.dumps(paginated_result.items)
-
-        return json_result, STATUS_SUCCESS_200
+            return paginated_result, STATUS_SUCCESS_200
 
     def put(self):
         """ """
