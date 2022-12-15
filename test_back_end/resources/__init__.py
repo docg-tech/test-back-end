@@ -35,6 +35,11 @@ class BaseCRUD:
         for column in columns_keys:
             columns_filter[column] = request.args.get(column, None, type=str)
 
+        # Remove keys with None values
+        columns_filter = {
+            k: v for k, v in columns_filter.items() if v is not None
+        }
+
         query = query.filter_by(**columns_filter)
 
         return query
