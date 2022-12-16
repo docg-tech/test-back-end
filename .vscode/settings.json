@@ -1,0 +1,14 @@
+{
+    "editor.quickSuggestionsDelay": 100,
+    "editor.tabCompletion": "off",
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/.pytest_cache": true,
+    },
+    "testing.defaultGutterClickAction": "debug"
+}
